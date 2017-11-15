@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>three.js webgl - geometry - vertex colors</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    
+    <style>
+      body {color: #808080;
+            font-family:Monospace;
+            font-size:13px;
+            text-align:center;
+            background-color: #fff;
+            margin: 0px;
+            overflow: hidden;}
+
+
+      a {color: #0080ff;}
+    </style>
+
+  </head>
+
+<body>
+
+    <div id="container"></div>
+
+
+    <script src="js/three.js"></script>
+    <script src="js/Detector.js"></script>
+    <script src="js/stats.min.js"></script>
+    <script src="js/DragControls.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+    <script>
+
+
+jQuery(document).ready(function($) {
+  var container, stats;
+      var camera, scene, renderer;
+      var mesh, group1, group2, group3, light;
+      var mouseX = 0, mouseY = 0;
+      var cubeMaterials;
+      var windowHalfX = window.innerWidth / 2;
+      var windowHalfY = window.innerHeight / 2;
+      var toDrag = [];
+
+
+  init();
+  animate();
+
+
+
+  function init() {
+    scene = new THREE.Scene();
+    window.scene = scene;
+
+
+
+    camera = new THREE.PerspectiveCamera(20,
+      window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.z = 1800;
+
+
+
+
+
+    var ambientLight = new THREE.AmbientLight(0xcccccc);
+    scene.add(ambientLight);
+
+
+
+
+
+    var directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.set(2, 2, 0.5).normalize();
+    directionalLight.intensity = 0.75;
+    scene.add(directionalLight);
+
+
+
+
+
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+    document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+
+
+
+    // create the shape
+    geometry = new THREE.TorusKnotGeometry(30, 30, 500, 30);
+    geometry2 = new THREE.TorusKnotGeometry(50, 30, 500, 30);
+    geometry3 = new THREE.TorusKnotGeometry(30, 30, 500, 30);
+
+
+
+    //box material 
+    material = new THREE.MeshNormalMaterial(  );
+
+
+
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.x = -400;
+    mesh.rotation.x = 0;
+    scene.add(mesh);
+    toDrag.push(mesh);
+
+
+    mesh2 = new THREE.Mesh(geometry2, material);
+    mesh2.position.x = 0;
+    mesh2.rotation.x = 0;
+    scene.add(mesh2);
+    toDrag.push(mesh2);
+
+
+    mesh3 = new THREE.Mesh(geometry3, material);
+    mesh3.position.x = 400;
+    mesh3.rotation.x = 0;
+    scene.add(mesh3);
+    toDrag.push(mesh3);
+
+
+
+  }
+  
+   	 
+
+
+
+
+	//drag
+
+  var dragControls = new THREE.DragControls( toDrag, camera, renderer.domElement );
+
+  dragControls.addEventListener( 'dragstart', function ( e ) {
+   // e.preventDefault()
+  });
+
+  dragControls.addEventListener( 'dragend', function ( e ) {
+   // e.preventDefault()
+  });
+  
+
+  
+
+
+
+  //mousemove
+      function onDocumentMouseMove( event ) {
+        mouseX = ( event.clientX - windowHalfX );
+        mouseY = ( event.clientY - windowHalfY );
+      }
+
+
+
+
+      function render() {
+        camera.position.x += ( mouseX - camera.position.x ) * 0.08;
+        camera.position.y += ( - mouseY - camera.position.y ) * 0.08;
+        camera.lookAt( scene.position );
+        renderer.render( scene, camera );
+      }
+
+
+
+
+  function animate() {
+      requestAnimationFrame( animate );
+        render();
+  }
+
+  
+
+
+
+
+
+  //resize
+
+  var windowHalfX = window.innerWidth / 2;
+  var windowHalfY = window.innerHeight / 2;
+
+  function onWindowResize() {
+    windowHalfX = window.innerWidth / 2;
+    windowHalfY = window.innerHeight / 2;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  window.addEventListener("resize", onWindowResize, false);
+});
+
+
+
+</script>
+
+
+
+<style>
+
+
+    body{ background: #ccc;}
+
+
+</style>
